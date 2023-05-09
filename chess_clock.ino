@@ -228,6 +228,6 @@ void loop() {
       }
     }
   } else if (pLTime <= 0 || pRTime <= 0) {
-    exit(0);
+    state = 2;
   }
 }

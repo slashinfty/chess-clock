@@ -35,6 +35,10 @@ screen_y = 14.5;
 switch_x = 12.7;
 switch_y = 6.9;
 
+// these are for gaps between holes
+slant_gap_x = 66;
+slant_gap_y = 27;
+
 // additional parameters
 wall = 3;
 roundness = 2.5;
@@ -119,13 +123,16 @@ module topHoles() {
 }
 
 module slantHoles() {
-    translate([0, 0, 0])
+    offset_x = (length + 2 * roundness - (slant_gap_x + wall + 2 * screen_x)) / 2;
+    offset_y = button_height - screen_y - 8;
+    translate([offset_x, offset_y - front_ledge, offset_y])
     rotate([45, 0, 0])
+    translate([0, 0, -wall])
     union() {
         cube([screen_x, screen_y, hole_height]);
-        translate([0, 0, 0])
+        translate([screen_x + slant_gap_x, 0, 0])
         cube([screen_x, screen_y, hole_height]);
-        translate([0, 0, 0])
+        translate([screen_x + (slant_gap_x / 2), -slant_gap_y, 0])
         cylinder(d = encoder_diameter, h = hole_height);
     }
 }
@@ -139,11 +146,11 @@ module switchHole() {
 final output
 ***********/
 
-//translate([0, full_width + roundness * 2, button_height + roundness * 2])rotate([180, 0, 0])
+translate([0, $preview ? 0 : full_width + roundness * 2, $preview ? 0 : button_height + roundness * 2])rotate([$preview ? 0 : 180, 0, 0])
 difference() {
     shell();
     interior();
     //topHoles();
-    //slantHoles();
+    slantHoles();
     //switchHole();
 }
